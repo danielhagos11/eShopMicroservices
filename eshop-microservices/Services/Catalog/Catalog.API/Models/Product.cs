@@ -1,11 +1,14 @@
-﻿namespace Catalog.API.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Catalog.API.Models
 {
     public class Product
     {
+        [Key]
         public Guid Id { get; set; }
-        public string Name { get; set; } = default;
+        public string Name { get; set; } = default!;
         public List<string> Category { get; set; } = new();
-        public string Description { get; set; } = default!;
+        public string? Description { get; set; }
         public string ImageFile { get; set; } = default!;
         public decimal Price { get; set; }
     }
