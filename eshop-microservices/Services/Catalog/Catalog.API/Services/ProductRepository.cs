@@ -1,5 +1,9 @@
 ﻿
 using Catalog.API.Data;
+using JasperFx.Core;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading;
 
 namespace Catalog.API.Services
 {
@@ -27,9 +31,10 @@ namespace Catalog.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts(CancellationToken cancellationToken)
         {
-            return await _context.Products.ToListAsync();
+            var results = await _context.Products.ToListAsync(cancellationToken);
+            return results;
         }
 
         public Task<Product> UpdateProduct(Product product)

@@ -3,9 +3,9 @@ version: '3.9'
 services:
 
   catalogdb:
-    image: postgres
+    image: mcr.microsoft.com/mssql/server
     build:
       context: .
-      dockerfile: Services/Catalog/Catalog.API/Dockerfilejk
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
 volumes:
-  postgres_catalog:
+  db_catalog:
