@@ -1,4 +1,5 @@
 ﻿using Catalog.API.Products.Command;
+using Catalog.API.Products.Endpoints;
 using Catalog.API.Products.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,16 @@ namespace Catalog.API.Controllers
             var command = new UpdateProductRequest(id, product);
             var result = await _mediator.Send(command);
             return Ok(result);
+        }
+
+        [HttpGet("category")]
+        public async Task<IActionResult> GetProductByCategory(string category)
+        {
+            var command = new GetProductByCategoryQuery(category);
+            var result = await _mediator.Send(command);
+            var response = result.Adapt<GetProductByCategoryResponse>();
+            return Ok(response);
+      
         }
 
         [HttpDelete("{id}")]
