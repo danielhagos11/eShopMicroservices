@@ -4,6 +4,7 @@
     {
         public Product Product { get; }
         public Guid Id { get; }
+
         public UpdateProductRequest(Guid id, Product product)
         {
             Id = id;

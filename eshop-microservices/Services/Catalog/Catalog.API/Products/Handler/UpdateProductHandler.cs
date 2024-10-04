@@ -1,4 +1,5 @@
 ﻿using Catalog.API.Data;
+using Catalog.API.Exceptions;
 using Catalog.API.Products.Command;
 using JasperFx.CodeGeneration.Model;
 using Microsoft.EntityFrameworkCore;
@@ -15,31 +16,17 @@ namespace Catalog.API.Products.Handler
 
         public async Task<Product> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
         {
-            var product = _context.Products.FindAsync(request.Product.Id);
-            if(request.Id != request.Product.Id)
+           var product = await _context.Products.FindAsync(request.Product.Id);
+           if(product is null)
             {
-                return request.Product;
+                throw new ProductNotFoundException(request.Id);
             }
 
             _context.Entry(request.Product).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            } catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExist(request.Product.Id))
-                {
-                    return request.Product;
-                }
-            }
+            await _context.SaveChangesAsync();
+                 
             return request.Product;
         }
-        private bool ProductExist(Guid id)
-        {
-            var product = _context.Products.Find(id);
-            if (product.Id != null) return true;
-            return false;           
-        }
+       
     }
 }

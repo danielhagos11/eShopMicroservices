@@ -1,13 +1,4 @@
-using BuildingBlocks.Behaviours;
-using Catalog.API.Data;
-using Catalog.API.Products;
-using Catalog.API.Products.Command;
-using Catalog.API.Services;
-using JasperFx.CodeGeneration.Frames;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Catalog.API.Data.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,44 +19,35 @@ builder.Services.AddDbContext<ProductCatalogDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
 });
 builder.Services.AddScoped<IValidator<Product>, ProductValidator>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 //builder.Services.AddMarten(opts =>
 //{
 //    opts.Connection(builder.Configuration.GetConnectionString("Database")!);
 
 //}).UseLightweightSessions();
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
 
 //Configure the HTTP request pipeline
 app.MapCarter();
 
+SeedDatabase();
+
 app.MapControllers();
 
-//app.UseExceptionHandler();
+app.UseExceptionHandler(options =>
+{
 
-//app.UseExceptionHandler(exceptionHandler =>
-//{
-//    exceptionHandler.Run(async context =>
-//    {
-//        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-//        if(exception == null)
-//        {
-//            return;
-//        }
-//        var problemDetails = new ProblemDetails
-//        {
-//            Title = exception.Message,
-//            Status = StatusCodes.Status500InternalServerError,
-//            Detail = exception.StackTrace
-//        };
-//        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-//        logger.LogError(exception, exception.Message);
+});
 
-//        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-//        context.Response.ContentType = "application/problem+json";
-
-//        await context.Response.WriteAsJsonAsync(problemDetails);
-//    });
-//});
 app.Run();
+void SeedDatabase()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}
