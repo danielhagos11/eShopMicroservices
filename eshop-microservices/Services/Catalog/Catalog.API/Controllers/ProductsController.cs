@@ -1,6 +1,7 @@
 ﻿using Catalog.API.Products.Command;
 using Catalog.API.Products.Endpoints;
 using Catalog.API.Products.Queries;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +12,11 @@ namespace Catalog.API.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public ProductsController(IMediator mediator)
+        private readonly ILogger _logger;
+        private TelemetryClient telemetry = new TelemetryClient();
+        public ProductsController(IMediator mediator, ILogger<ProductsController> logger)
         {
+            this._logger = logger;
             _mediator = mediator;
         }
 
@@ -20,7 +24,7 @@ namespace Catalog.API.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> Index()
         {
             //specifying the query for the endpoint
-            var query = new GetProductsQueries();
+            var query = new GetProductsQueries();           
 
             var result = await _mediator.Send(query);
 
@@ -29,7 +33,18 @@ namespace Catalog.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(Guid id)
         {
+            _logger.LogInformation("This endpoint visited at {DT}",
+            DateTime.UtcNow.ToLongTimeString());
             var query = new GetProductQuery(id);
+            if (query.productId != id) 
+            {
+                var dictionary = new Dictionary<string, Guid>();
+                dictionary.Add("id",id);
+                telemetry.TrackEvent("FilteredOnStatus", (IDictionary<string, string>)dictionary);
+                _logger.LogWarning(ProductLogEvent.GetItemNotFound, "Get({Id}) NOT FOUND", id);
+            }
+            _logger.LogInformation(ProductLogEvent.GetItem, "Getting item {Id}", id);
+
             var result = await _mediator.Send(query);
             return Ok(result);
         }
