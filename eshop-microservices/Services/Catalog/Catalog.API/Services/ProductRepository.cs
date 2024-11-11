@@ -16,7 +16,7 @@ namespace Catalog.API.Services
         }
         public async Task<Product> AddProduct(Product product)
         {
-            var result = await _context.Products.AddAsync(product);
+            var result = await _context.Productss.AddAsync(product);
             await _context.SaveChangesAsync();
             return result.Entity;
         }
@@ -33,7 +33,7 @@ namespace Catalog.API.Services
 
         public async Task<IEnumerable<Product>> GetProducts(CancellationToken cancellationToken)
         {
-            var results = await _context.Products.ToListAsync(cancellationToken);
+            var results = await _context.Productss.ToListAsync(cancellationToken);
             return results;
         }
 

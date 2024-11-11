@@ -16,7 +16,7 @@ namespace Catalog.API.Products.Handler
 
         public async Task<Product> Handle(UpdateProductRequest request, CancellationToken cancellationToken)
         {
-           var product = await _context.Products.FindAsync(request.Product.Id);
+           var product = await _context.Productss.FindAsync(request.Product.Id);
            if(product is null)
             {
                 throw new ProductNotFoundException(request.Id);

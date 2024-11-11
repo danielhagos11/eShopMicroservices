@@ -7,7 +7,7 @@ namespace Catalog.API.Data
         public ProductCatalogDbContext(DbContextOptions<ProductCatalogDbContext> options)
             :base(options) { }
 
-        public DbSet<Product> Products { get; set; } = default!; 
+        public DbSet<Product> Productss { get; set; } = default!; 
             
         }
 

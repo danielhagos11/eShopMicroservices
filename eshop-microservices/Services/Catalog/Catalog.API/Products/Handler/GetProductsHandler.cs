@@ -17,7 +17,7 @@ namespace Catalog.API.Products.Handler
 
         public async Task<IEnumerable<Product>> Handle(GetProductsQueries request, CancellationToken cancellationToken)
         {
-            var result = await _context.Products.ToListAsync(cancellationToken);
+            var result = await _context.Productss.ToListAsync(cancellationToken);
             //_logger.LogInformation(ProductLogEvent.GetItem, "Getting List of products");
             return result;
         }

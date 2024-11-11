@@ -28,7 +28,7 @@
                 Description = "lorem ipsum",
                 Price = 211
             };
-            _context.Products.Add(product);
+            _context.Productss.Add(product);
             _context.SaveChanges();
         }
     }
