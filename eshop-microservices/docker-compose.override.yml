@@ -2,12 +2,10 @@ services:
   catalogdb:
     container_name: catalogdb
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=CatalogDb
+      - MSSQL_SA_PASSWORD=Admin123.      
     restart: always
     ports:
-        - "5432:5432"
+        - "1433:1433"
     volumes:
-      - postgres_catalog:/var/lib/postgresql/data/ 
+      - db_catalog:/var/opt/mssql 
  
