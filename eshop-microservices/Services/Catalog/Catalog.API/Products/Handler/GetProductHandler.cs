@@ -17,7 +17,7 @@ namespace Catalog.API.Products.Handler
         public async Task<Product> Handle(GetProductQuery request, CancellationToken cancellationToken)
         {
             //_logger.LogInformation(ProductLogEvent.GetItem, "Getting item {Id}", request.productId);
-            var result = await _context.Products.FindAsync(request.productId);
+            var result = await _context.Productss.FindAsync(request.productId);
             if (result is null) 
             {
                 //_logger.LogWarning(ProductLogEvent.GetItemNotFound, "Get({Id}) NOT FOUND", request.productId);

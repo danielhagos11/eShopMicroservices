@@ -14,10 +14,10 @@ namespace Catalog.API.Products.Handler
 
         public async Task<bool> Handle(DeleteProductRequest request, CancellationToken cancellationToken)
         {
-            var product = await _context.Products.FindAsync(request.Id);
+            var product = await _context.Productss.FindAsync(request.Id);
             if (product != null) 
             { 
-                _context.Products.Remove(product);
+                _context.Productss.Remove(product);
             }
             await _context.SaveChangesAsync();
             return true;
